@@ -5,6 +5,9 @@ $(function() {
   // the name of the last added post
   var last_added = '';
 
+  // array of names of things on page
+  // var onPagePosts = [];
+
   // array of objects with link to image, post title, link to reddit
   var posts = [];
 
@@ -12,18 +15,20 @@ $(function() {
   var scrollLoad = true;
 
   var requestData = function() {
-    console.log(last_added);
-    $.get("http://api.reddit.com/r/pics/top.json?t=week&limit=10&before="+last_added, function(data) {
+    posts = [];
+    $.get("http://api.reddit.com/r/pics/top.json?t=week&after="+last_added, function(data) {
       var arr = data.data.children;
       arr.forEach(function(post) {
-        if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(post.data.url)) {
+        if (!post.data.is_self && (/\.(gif|jpg|jpeg|tiff|png)$/i).test(post.data.url)) {
           posts.push({
             'title': post.data.title,
             'img_src': post.data.url,
             'name': post.data.name,
             'permalink': 'http://reddit.com/' + post.data.permalink
           });
+          // onPagePosts.push(post.data.name);
         }
+        last_added = post.data.name;
       });
       scrollLoad = true;
       buildGrid();
@@ -40,7 +45,6 @@ $(function() {
       w = $(window).innerWidth() / 3;
       h = n.height / ratio;
       html += temp.replace("{height}", h).replace("{width}", w).replace("{img}", posts[i].img_src);
-      last_added = posts[i].name;
     }
     $("#freewall").append(html);
     
