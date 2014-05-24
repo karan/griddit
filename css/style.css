@@ -48,7 +48,7 @@ body {
 }
 
 .brick {
-  background: #111111;
+  background: #fff;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
   border-radius: 3px;
   color: #333;
@@ -182,22 +182,11 @@ body {
 
 
 .loadinggif {
-  background-image: url('spin.gif');
+  background-image: url('../images/spin.gif');
   background-repeat: no-repeat;
   background-position: right;
 }
 
-
-.logo:before {
-    content: "griddit";
-    color: #FFFFFF;
-    font-size: 2.1em;
-    font-family: 'Rock Salt', cursive;
-    -webkit-animation: blink-logo 0.5s infinite;
-    -moz-animation:    blink-logo 0.5s infinite;
-    -o-animation:      blink-logo 0.5s infinite;
-    animation:         blink-logo 0.5s infinite;
-}
 
 #modal-close {
   position: absolute;
@@ -207,5 +196,5 @@ body {
   width: 30px;
   height: 30px;
   text-indent: -9999px;
-  background: url(close.png) no-repeat 0 0;
+  background: url('../images/close.png') no-repeat 0 0;
 }
