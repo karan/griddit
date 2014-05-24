@@ -20,10 +20,12 @@ $(function() {
       var ratio = this.width / w;
       h = this.height / ratio;
 
+      console.log(h);
+
       $(this).css({'height': h});
 
-      var innerDiv = "<div class='info'><h3><a href='" + post.permalink + "' target='_blank'>" + post.title + "</a></h3></div>";
-      outerDiv.append(this.outerHTML).append(innerDiv);
+      // var innerDiv = "<div class='info'><h3><a href='" + post.permalink + "' target='_blank'>" + post.title + "</a></h3></div>";
+      outerDiv.append(this.outerHTML);//.append(innerDiv);
 
       // return outerDiv[0].outerHTML;
       $("#grid").append(outerDiv[0].outerHTML);
@@ -96,7 +98,7 @@ $(function() {
     }
   });
 
-  // requestData(q, makeWall);
+  requestData(q, makeWall);
 
   $('#searchterm').keypress(function(event) {
     if (event.which == 13) {
