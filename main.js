@@ -56,7 +56,7 @@ $(function() {
               'title': res_post.data.title,
               'img_src': res_post.data.url,
               'name': res_post.data.name,
-              'permalink': 'http://reddit.com/' + res_post.data.permalink
+              'permalink': 'http://reddit.com' + res_post.data.permalink
             };
 
             getOneHtml(post, w);
@@ -96,7 +96,7 @@ $(function() {
     }
   });
 
-  requestData(q, makeWall);
+  // requestData(q, makeWall);
 
   $('#searchterm').keypress(function(event) {
     if (event.which == 13) {
@@ -110,6 +110,13 @@ $(function() {
       requestData(q, makeWall);
     }
 
+  });
+
+  $("#help").click(function() {
+    $("#openModal").modal({
+      fadeDuration: 250
+    });
+    return false;
   });
 
 });

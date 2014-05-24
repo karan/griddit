@@ -198,3 +198,14 @@ body {
     -o-animation:      blink-logo 0.5s infinite;
     animation:         blink-logo 0.5s infinite;
 }
+
+#modal-close {
+  position: absolute;
+  top: -12.5px;
+  right: -12.5px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  text-indent: -9999px;
+  background: url(close.png) no-repeat 0 0;
+}
