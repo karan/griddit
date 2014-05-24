@@ -5,9 +5,6 @@ $(function() {
   // the name of the last added post
   var last_added = '';
 
-  // array of names of things on page
-  // var onPagePosts = [];
-
   // array of objects with link to image, post title, link to reddit
   var posts = [];
 
@@ -26,7 +23,6 @@ $(function() {
             'name': post.data.name,
             'permalink': 'http://reddit.com/' + post.data.permalink
           });
-          // onPagePosts.push(post.data.name);
         }
         last_added = post.data.name;
       });
@@ -36,21 +32,23 @@ $(function() {
   }
 
   var buildGrid = function() {
-    var temp = "<div class='cell' style='width:{width}px;height:{height}px;background-image:url({img})'></div>";
+    // var temp = "<div class='brick' style='width:{width}px;height:{height}px;background-image:url({img})'><div class='info'><h3><a href='{permalink}' target='_blank'>{title}</a></h3></div></div>";
+    var temp = "<div class='brick' style='width:{width}px;'><img src='{img}' style='height:{height}px;' /><div class='info'><h3><a href='{permalink}' target='_blank'>{title}</a></h3></div></div>";
     var w = 1, html = '';
     for (var i = 0; i < posts.length; i++) {
       var n = new Image();
       n.src = posts[i].img_src;
       var ratio = n.width / ($(window).innerWidth() / 3);
       w = $(window).innerWidth() / 3;
-      h = n.height / ratio;
-      html += temp.replace("{height}", h).replace("{width}", w).replace("{img}", posts[i].img_src);
+      h = 50 + n.height / ratio;
+      console.log(h, n.height / ratio);
+      html += temp.replace("{height}", h).replace("{width}", w).replace("{img}", posts[i].img_src).replace("{title}", posts[i].title).replace("{permalink}", posts[i].permalink);
     }
-    $("#freewall").append(html);
+    $("#grid").append(html);
     
-    var wall = new freewall("#freewall");
+    var wall = new freewall("#grid");
     wall.reset({
-      selector: '.cell',
+      selector: '.brick',
       animate: true,
       cellW: 160,
       cellH: 160,
