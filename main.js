@@ -2,39 +2,47 @@ var gridster;
 
 $(function() {
 
-  // $('.cell').css("width", $(window).innerWidth / 3 + "px");
-  // $(window).resize(function() {
-  //   $('.cell').css("width", $(window).innerWidth / 3 + "px");
-  // });
+  // the name of the last added post
+  var last_added = '';
 
   // array of objects with link to image, post title, link to reddit
   var posts = [];
-  $.get("http://api.reddit.com/r/pics/hot.json", function(data) {
-    var arr = data.data.children;
-    arr.forEach(function(post) {
-      if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(post.data.url)) {
-        posts.push({
-          'title': post.data.title,
-          'img_src': post.data.url,
-          'permalink': 'http://reddit.com/' + post.data.permalink
-        });
-      }
+
+  // to control the flow of loading during scroll
+  var scrollLoad = true;
+
+  var requestData = function() {
+    console.log(last_added);
+    $.get("http://api.reddit.com/r/pics/top.json?t=week&limit=10&before="+last_added, function(data) {
+      var arr = data.data.children;
+      arr.forEach(function(post) {
+        if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(post.data.url)) {
+          posts.push({
+            'title': post.data.title,
+            'img_src': post.data.url,
+            'name': post.data.name,
+            'permalink': 'http://reddit.com/' + post.data.permalink
+          });
+        }
+      });
+      scrollLoad = true;
+      buildGrid();
     });
-    buildGrid();
-  });
+  }
 
   var buildGrid = function() {
     var temp = "<div class='cell' style='width:{width}px;height:{height}px;background-image:url({img})'></div>";
     var w = 1, html = '';
-    for (var i = 0; i < posts.length; ++i) {
+    for (var i = 0; i < posts.length; i++) {
       var n = new Image();
       n.src = posts[i].img_src;
       var ratio = n.width / ($(window).innerWidth() / 3);
       w = $(window).innerWidth() / 3;
       h = n.height / ratio;
       html += temp.replace("{height}", h).replace("{width}", w).replace("{img}", posts[i].img_src);
+      last_added = posts[i].name;
     }
-    $("#freewall").html(html);
+    $("#freewall").append(html);
     
     var wall = new freewall("#freewall");
     wall.reset({
@@ -47,8 +55,19 @@ $(function() {
       }
     });
     wall.fitWidth();
+
     // for scroll bar appear;
     $(window).trigger("resize");
   }
+
+  // infinite scroll
+  $(window).scroll(function () { 
+    if (scrollLoad && $(window).scrollTop() >= $(document).height() - $(window).height() - 50) {
+      scrollLoad = false;
+      requestData();
+    }
+  });
+
+  requestData();
 
 });
