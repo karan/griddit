@@ -1,6 +1,11 @@
 var gridster;
 
-$(function(){
+$(function() {
+
+  // $('.cell').css("width", $(window).innerWidth / 3 + "px");
+  // $(window).resize(function() {
+  //   $('.cell').css("width", $(window).innerWidth / 3 + "px");
+  // });
 
   // array of objects with link to image, post title, link to reddit
   var posts = [];
@@ -19,14 +24,15 @@ $(function(){
   });
 
   var buildGrid = function() {
-    var temp = "<div class='cell' style='width:{width}px; height: {height}px;'><img src='{img}'/></div>";
-    var w = 1, html = '', limitItem = posts.length;
-    for (var i = 0; i < limitItem; ++i) {
+    var temp = "<div class='cell' style='width:{width}px;height:{height}px;background-image:url({img})'></div>";
+    var w = 1, html = '';
+    for (var i = 0; i < posts.length; ++i) {
       var n = new Image();
       n.src = posts[i].img_src;
-      w = n.width / 5;
-      h = n.height / 5;
-      html += temp.replace(/\{height\}/g, h).replace(/\{width\}/g, w).replace(/\{img\}/g, posts[i].img_src);
+      var ratio = n.width / ($(window).innerWidth() / 3);
+      w = $(window).innerWidth() / 3;
+      h = n.height / ratio;
+      html += temp.replace("{height}", h).replace("{width}", w).replace("{img}", posts[i].img_src);
     }
     $("#freewall").html(html);
     

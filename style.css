@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'Rock Salt';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Rock Salt'), local('RockSalt'), url(http://themes.googleusercontent.com/static/fonts/rocksalt/v4/Q94aHXFHGip10K5uxi1jOLO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
+
+html,body { height: 100%; margin: 0px; padding: 0px; }
+
+body {
+    background-color: #111111;
+    font-family: avenir, 'avenir next', helvetica, arial, sans-serif;
+    text-align: center;
+}
+
+.freewall {
+  width: 100%
+}
