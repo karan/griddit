@@ -47,9 +47,6 @@ body {
   -webkit-transition: top 0.3s, left 0.3s, width 0.3s, height 0.3s;
 }
 
-
-
-
 .brick {
   background: white;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
@@ -64,7 +61,6 @@ body {
   background-position: center;
 }
 
-
 .brick .img {
   width: 100%;
   max-width: 100%;
@@ -78,4 +74,127 @@ body {
 .info {
   padding: 15px;
   color: #333;
+}
+
+.main-grid {
+  margin-top: 60px;
+}
+
+
+
+
+
+.header {
+  width: 100%;
+  background: #111111;
+  height: 60px;
+  line-height: 1;
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+}
+
+.header-wrapper {
+  width: 90%;
+  margin: 0 auto;
+  height: 60px;
+  text-align: left;
+  position: relative;
+}
+
+.search, .social, #loadingDiv {
+  display: inline-block;
+  vertical-align: top;
+  position: absolute;
+  top: 0;
+}
+
+.search {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 1px;
+  width: 40%;
+}
+
+#searchterm {
+  width: 100%;
+  max-width: 400px;
+  height: 30px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 0;
+  color: #FFFFFF;
+  background-color: rgba(255, 255, 255,.1);
+  padding: 10px;
+  outline: 0px;
+  -moz-box-shadow: 0 0 5px #888;
+  -webkit-box-shadow: 0 0 5px#888;
+  box-shadow: 0 0 5px #888;
+}
+
+.navextra {
+  vertical-align: top;
+  position: absolute;
+  left: 40%;
+  top: 0;
+  width: 50%;
+  height: 50px;
+}
+
+.social {
+  display: inline-block;
+  vertical-align: top;
+  left: 30%;
+  width: 100%;
+}
+
+.share {
+  display: inline-block;
+  vertical-align: top;
+  color: #FFF;
+  font-size: 32px;
+  padding-top: 7px;
+  height: 50px;
+  width: 20%;
+  opacity: 1;
+  text-align: center;
+}
+
+.share:hover {
+    opacity: 0.7;
+}
+
+.sbg-facebook {
+    background: #3971B6;
+}
+
+.sbg-twitter {
+    background: #A0D6E2;
+}
+
+.sbg-github {
+    background: #333333;
+}
+
+.sbg-help {
+    background-color: #3D9970;
+}
+
+
+.loadinggif {
+  background-image: url('spin.gif');
+  background-repeat: no-repeat;
+  background-position: right;
+}
+
+
+.logo:before {
+    content: "griddit";
+    color: #FFFFFF;
+    font-size: 2.1em;
+    font-family: 'Rock Salt', cursive;
+    -webkit-animation: blink-logo 0.5s infinite;
+    -moz-animation:    blink-logo 0.5s infinite;
+    -o-animation:      blink-logo 0.5s infinite;
+    animation:         blink-logo 0.5s infinite;
 }

@@ -1,5 +1,3 @@
-var gridster;
-
 $(function() {
 
   // the name of the last added post
@@ -8,10 +6,9 @@ $(function() {
   // to control the flow of loading during scroll
   var scrollLoad = true;
 
+  var q = 'cats';
 
   function getOneHtml(post, w) {
-    console.log("getting one html");
-
     var outerDiv = $("<div>", {class: "brick"});
     outerDiv.width(w);
 
@@ -41,69 +38,40 @@ $(function() {
     var w = $(window).innerWidth() / 3, 
         html = '';
 
-    $.get("http://api.reddit.com/r/" + subreddit + "/top.json?t=week&after="+last_added, function(data) {
-      var arr = data.data.children;
+    $.ajax({
+      type: 'get',
+      url: "http://api.reddit.com/r/" + subreddit + "/top.json?t=week&after="+last_added,
+      beforeSend: function() {
+        $("#searchterm").addClass("loadinggif");
+      },
+      complete: function() {
+        $("#searchterm").removeClass("loadinggif");
+      },
+      success: function(data) {
+        var arr = data.data.children;
 
-      arr.forEach(function(res_post) {
-        if (!res_post.data.is_self && (/\.(gif|jpg|jpeg|tiff|png)$/i).test(res_post.data.url)) {
+        arr.forEach(function(res_post) {
+          if (!res_post.data.is_self && (/\.(gif|jpg|jpeg|tiff|png)$/i).test(res_post.data.url)) {          
+            var post = {
+              'title': res_post.data.title,
+              'img_src': res_post.data.url,
+              'name': res_post.data.name,
+              'permalink': 'http://reddit.com/' + res_post.data.permalink
+            };
 
-          console.log("looping in requestData");
-          
-          var post = {
-            'title': res_post.data.title,
-            'img_src': res_post.data.url,
-            'name': res_post.data.name,
-            'permalink': 'http://reddit.com/' + res_post.data.permalink
-          };
+            getOneHtml(post, w);
+            
+          }
+          last_added = res_post.data.name;
+        });
 
-          getOneHtml(post, w);
-          
-        }
-        last_added = res_post.data.name;
-      });
-
-      scrollLoad = true;
-      console.log("calling callback");
-      callback();
+        scrollLoad = true;
+        callback();
+      }
     });
   }
 
-
-  // var buildGrid = function(posts) {
-  //   var w = $(window).innerWidth() / 3, 
-  //       html = '';
-
-  //   for (var i = 0; i < posts.length; i++) {
-  //     console.log(i);
-  //     console.log("looping");
-  //     var post = posts[i];
-
-  //     var outerDiv = $("<div>", {class: "brick"});
-  //     outerDiv.width(w);
-
-  //     var img = $("<img />");
-  //     img.attr("src", post.img_src);
-
-  //     img.on('load', function() {
-  //       console.log("img loaded");
-  //       var ratio = this.width / w;
-  //       h = this.height / ratio;
-
-  //       $(this).css({'height': h});
-
-  //       var innerDiv = "<div class='info'><h3><a href='" + post.permalink + "' target='_blank'>" + post.title + "</a></h3></div>";
-  //       outerDiv.append(this.outerHTML).append(innerDiv);
-
-  //       console.log(outerDiv);
-  //       html += outerDiv[0].outerHTML;
-  //     });
-  //   }
-  // }
-
   function makeWall() {
-    console.log("making wall");
-    // $("#grid").append(html);
-    
     var wall = new freewall("#grid");
     wall.reset({
       selector: '.brick',
@@ -124,10 +92,24 @@ $(function() {
   $(window).scroll(function () { 
     if (scrollLoad && $(window).scrollTop() >= $(document).height() - $(window).height() - 50) {
       scrollLoad = false;
-      requestData('pics', makeWall);
+      requestData(q, makeWall);
     }
   });
 
-  requestData('pics', makeWall);
+  requestData(q, makeWall);
+
+  $('#searchterm').keypress(function(event) {
+    if (event.which == 13) {
+      $("#grid").empty();
+      last_added = '';
+
+      // ga('send', 'event', 'input', 'search');
+      event.preventDefault();
+      q = $("#searchterm").val();
+      console.log(q);
+      requestData(q, makeWall);
+    }
+
+  });
 
 });

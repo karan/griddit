@@ -2,15 +2,33 @@
 <html>
 <head>
   <title>griddit</title>
-
+  
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="grid" class="main-grid"></div>
+  <div class="header">
+    <div class="header-wrapper">
+      <div class="search">
+        <input id="searchterm" type="text" autofocus placeholder="Enter a subreddit..." />
+      </div>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="freewall.js" type="text/javascript" charset="utf-8"></script>
-    <script src="main.js"></script>
+      <div class="navextra">
+        <div class="social">
+          <a href="http://github.com/karan/SoundWall" target="_blank"><span class="fa fa-github share sbg-github"></span></a>
+          <a href="https://twitter.com/intent/tweet?text=SoundCloud+Wall&amp;url=http://karan.github.io/SoundWall&amp;via=TheKaranGoel" target="_blank"><span class="fa fa-twitter share sbg-twitter"></span></a>
+          <a href="" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),'facebook-share-dialog','width=626,height=436');return false;"><span class="fa fa-facebook share sbg-facebook"></span></a>
+        </div>
+      </div>
+      
+    </div>
+  </div>   
+
+  <div id="grid" class="main-grid"></div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="freewall.js" type="text/javascript" charset="utf-8"></script>
+  <script src="main.js"></script>
 </body>
 </html>
