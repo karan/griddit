@@ -40,8 +40,8 @@ $(function() {
     wall.reset({
       selector: '.cell',
       animate: true,
-      cellW: 20,
-      cellH: 200,
+      cellW: 160,
+      cellH: 160,
       onResize: function() {
         wall.fitWidth();
       }
