@@ -4,70 +4,105 @@ $(function() {
 
   // the name of the last added post
   var last_added = '';
-
-  // array of objects with link to image, post title, link to reddit
-  var posts = [];
-
+  
   // to control the flow of loading during scroll
   var scrollLoad = true;
 
-  var requestData = function() {
-    posts = [];
-    $.get("http://api.reddit.com/r/pics/top.json?t=week&after="+last_added, function(data) {
-      var arr = data.data.children;
-      arr.forEach(function(post) {
-        if (!post.data.is_self && (/\.(gif|jpg|jpeg|tiff|png)$/i).test(post.data.url)) {
-          posts.push({
-            'title': post.data.title,
-            'img_src': post.data.url,
-            'name': post.data.name,
-            'permalink': 'http://reddit.com/' + post.data.permalink
-          });
-        }
-        last_added = post.data.name;
-      });
-      scrollLoad = true;
-      buildGrid();
+
+  function getOneHtml(post, w) {
+    console.log("getting one html");
+
+    var outerDiv = $("<div>", {class: "brick"});
+    outerDiv.width(w);
+
+    var img = $("<img />");
+    img.attr("src", post.img_src);
+
+    img.on('load', function() {
+      console.log("img loaded");
+      var ratio = this.width / w;
+      h = this.height / ratio;
+
+      $(this).css({'height': h});
+
+      var innerDiv = "<div class='info'><h3><a href='" + post.permalink + "' target='_blank'>" + post.title + "</a></h3></div>";
+      outerDiv.append(this.outerHTML).append(innerDiv);
+
+      // return outerDiv[0].outerHTML;
+      $("#grid").append(outerDiv[0].outerHTML);
     });
   }
 
-  var buildGrid = function() {
-    var deferred = $.Deferred();
+
+  function requestData(subreddit, callback) {
+    // array of objects with link to image, post title, link to reddit
+    posts = [];
 
     var w = $(window).innerWidth() / 3, 
         html = '';
 
-    for (var i = 0; i < posts.length; i++) {
-      console.log("looping");
-      var post = posts[i];
+    $.get("http://api.reddit.com/r/" + subreddit + "/top.json?t=week&after="+last_added, function(data) {
+      var arr = data.data.children;
 
-      var outerDiv = $("<div>", {class: "brick"});
-      outerDiv.width(w);
+      arr.forEach(function(res_post) {
+        if (!res_post.data.is_self && (/\.(gif|jpg|jpeg|tiff|png)$/i).test(res_post.data.url)) {
 
-      var img = $("<img />");
-      img.attr("src", post.img_src);
+          console.log("looping in requestData");
+          
+          var post = {
+            'title': res_post.data.title,
+            'img_src': res_post.data.url,
+            'name': res_post.data.name,
+            'permalink': 'http://reddit.com/' + res_post.data.permalink
+          };
 
-      img.on('load', function() {
-        deferred.resolve();
-        
-        console.log("img loaded");
-        var ratio = this.width / w;
-        h = this.height / ratio;
-
-        $(this).css({'height': h});
-
-        var innerDiv = "<div class='info'><h3><a href='" + post.permalink + "' target='_blank'>" + post.title + "</a></h3></div>";
-        outerDiv.append(this.outerHTML).append(innerDiv);
-
-        html += outerDiv[0].outerHTML;
+          getOneHtml(post, w);
+          
+        }
+        last_added = res_post.data.name;
       });
-    }
 
+      scrollLoad = true;
+      console.log("calling callback");
+      callback();
+    });
   }
 
-  var renderImages = function(html) {
-    console.log("rendering images");
-    $("#grid").append(html);
+
+  // var buildGrid = function(posts) {
+  //   var w = $(window).innerWidth() / 3, 
+  //       html = '';
+
+  //   for (var i = 0; i < posts.length; i++) {
+  //     console.log(i);
+  //     console.log("looping");
+  //     var post = posts[i];
+
+  //     var outerDiv = $("<div>", {class: "brick"});
+  //     outerDiv.width(w);
+
+  //     var img = $("<img />");
+  //     img.attr("src", post.img_src);
+
+  //     img.on('load', function() {
+  //       console.log("img loaded");
+  //       var ratio = this.width / w;
+  //       h = this.height / ratio;
+
+  //       $(this).css({'height': h});
+
+  //       var innerDiv = "<div class='info'><h3><a href='" + post.permalink + "' target='_blank'>" + post.title + "</a></h3></div>";
+  //       outerDiv.append(this.outerHTML).append(innerDiv);
+
+  //       console.log(outerDiv);
+  //       html += outerDiv[0].outerHTML;
+  //     });
+  //   }
+  // }
+
+  function makeWall() {
+    console.log("making wall");
+    // $("#grid").append(html);
     
     var wall = new freewall("#grid");
     wall.reset({
@@ -89,10 +124,10 @@ $(function() {
   $(window).scroll(function () { 
     if (scrollLoad && $(window).scrollTop() >= $(document).height() - $(window).height() - 50) {
       scrollLoad = false;
-      requestData();
+      requestData('pics', makeWall);
     }
   });
 
-  requestData();
+  requestData('pics', makeWall);
 
 });
