@@ -32,18 +32,41 @@ $(function() {
   }
 
   var buildGrid = function() {
-    // var temp = "<div class='brick' style='width:{width}px;height:{height}px;background-image:url({img})'><div class='info'><h3><a href='{permalink}' target='_blank'>{title}</a></h3></div></div>";
-    var temp = "<div class='brick' style='width:{width}px;'><img src='{img}' style='height:{height}px;' /><div class='info'><h3><a href='{permalink}' target='_blank'>{title}</a></h3></div></div>";
-    var w = 1, html = '';
+    var deferred = $.Deferred();
+
+    var w = $(window).innerWidth() / 3, 
+        html = '';
+
     for (var i = 0; i < posts.length; i++) {
-      var n = new Image();
-      n.src = posts[i].img_src;
-      var ratio = n.width / ($(window).innerWidth() / 3);
-      w = $(window).innerWidth() / 3;
-      h = 50 + n.height / ratio;
-      console.log(h, n.height / ratio);
-      html += temp.replace("{height}", h).replace("{width}", w).replace("{img}", posts[i].img_src).replace("{title}", posts[i].title).replace("{permalink}", posts[i].permalink);
+      console.log("looping");
+      var post = posts[i];
+
+      var outerDiv = $("<div>", {class: "brick"});
+      outerDiv.width(w);
+
+      var img = $("<img />");
+      img.attr("src", post.img_src);
+
+      img.on('load', function() {
+        deferred.resolve();
+        
+        console.log("img loaded");
+        var ratio = this.width / w;
+        h = this.height / ratio;
+
+        $(this).css({'height': h});
+
+        var innerDiv = "<div class='info'><h3><a href='" + post.permalink + "' target='_blank'>" + post.title + "</a></h3></div>";
+        outerDiv.append(this.outerHTML).append(innerDiv);
+
+        html += outerDiv[0].outerHTML;
+      });
     }
+
+  }
+
+  var renderImages = function(html) {
+    console.log("rendering images");
     $("#grid").append(html);
     
     var wall = new freewall("#grid");
