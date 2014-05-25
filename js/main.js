@@ -37,7 +37,7 @@ $(function() {
 
     $.ajax({
       type: 'get',
-      url: "http://api.reddit.com/r/" + subreddit + "/hot.json?limit=10&after="+last_added,
+      url: "http://api.reddit.com/r/" + subreddit + "/hot.json?limit=20&after="+last_added,
       beforeSend: function() {
         $("#searchterm").addClass("loadinggif");
       },
@@ -51,7 +51,7 @@ $(function() {
           if (!res_post.data.is_self && (/\.(gif|jpg|jpeg|tiff|png)$/i).test(res_post.data.url)) {          
             var post = {
               'title': res_post.data.title,
-              'img_src': res_post.data.url,
+              'img_src': "http://i.embed.ly/1/image/resize?url=" + res_post.data.url + "&key=92b31102528511e1a2ec4040d3dc5c07&width=" + ($(window).innerWidth() / 4),
               'name': res_post.data.name,
               'permalink': 'http://reddit.com' + res_post.data.permalink
             };
