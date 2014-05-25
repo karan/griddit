@@ -25,12 +25,15 @@ $(function() {
     img.attr("src", post.img_src);
     img.width(w);
 
+    console.log(img);
+
     outerDiv.append("<a href='" + post.permalink + "' target='_blank'>" + img[0].outerHTML + "</a>");
     return outerDiv[0].outerHTML;
   }
 
 
   function requestData(subreddit, callback) {
+    ga('send', 'event', 'input', 'redditApiCall');
     // array of objects with link to image, post title, link to reddit
     posts = [];
 
@@ -86,6 +89,7 @@ $(function() {
   }
 
   function newSearch(q) {
+    ga('send', 'event', 'input', 'newSearch-call');
     requestData(q, function(posts) {
       getAllHtml(posts, function(allhtml) {
         makeWall(allhtml);
@@ -96,6 +100,7 @@ $(function() {
   // infinite scroll
   $(window).scroll(function () { 
     if (scrollLoad && $(window).scrollTop() >= $(document).height() - $(window).height() - 50) {
+      ga('send', 'event', 'input', 'scroll');
       scrollLoad = false;
       newSearch(q);
     }
@@ -105,9 +110,9 @@ $(function() {
 
   $('#searchterm').keypress(function(event) {
     if (event.which == 13) {
+      ga('send', 'event', 'input', 'search');
       $("#grid").empty();
       last_added = '';
-      // ga('send', 'event', 'input', 'search');
       event.preventDefault();
       q = $("#searchterm").val();
       newSearch(q);
@@ -116,6 +121,7 @@ $(function() {
   });
 
   $("#help").click(function() {
+    ga('send', 'event', 'input', 'modal');
     $("#openModal").modal({
       fadeDuration: 250
     });
