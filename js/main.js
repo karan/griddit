@@ -37,7 +37,7 @@ $(function() {
 
     $.ajax({
       type: 'get',
-      url: "http://api.reddit.com/r/" + subreddit + "/hot.json?after="+last_added,
+      url: "http://api.reddit.com/r/" + subreddit + "/hot.json?limit=10&after="+last_added,
       beforeSend: function() {
         $("#searchterm").addClass("loadinggif");
       },
