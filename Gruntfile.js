@@ -46,6 +46,14 @@ module.exports = function(grunt) {
           'dist/css/vendor/jquery.modal.min.css': 'css/vendor/jquery.modal.css'
         }
       }
+    },
+
+    // Simple config to run jshint any time a file is added, changed or deleted
+    watch: {
+      src: {
+        files: ['js/*.js', 'css/*.css'],
+        tasks: ['default']
+      },
     }
 
   });
@@ -61,5 +69,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
 };
