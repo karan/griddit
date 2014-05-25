@@ -23,9 +23,7 @@ $(function() {
 
     var img = $("<img />");
     img.attr("src", post.img_src);
-    img.width(w);
-    // console.log(img.height());
-    img.css({"min-height": "200px"});
+    img.css({"width": w+"px"});
 
     outerDiv.append("<a href='" + post.permalink + "' target='_blank'>" + img[0].outerHTML + "</a>");
     return outerDiv[0].outerHTML;
@@ -77,7 +75,7 @@ $(function() {
       selector: '.brick',
       animate: true,
       cellW: 160,
-      cellH: 160,
+      cellH: 'auto',
       onResize: function() {
         wall.fitWidth();
       }
