@@ -88,6 +88,9 @@ $(function() {
 
   function newSearch(q) {
     ga('send', 'event', 'input', 'newSearch-call');
+
+    window.location.hash = q;
+
     requestData(q, function(posts) {
       getAllHtml(posts, function(allhtml) {
         makeWall(allhtml);
@@ -104,7 +107,12 @@ $(function() {
     }
   });
 
-  newSearch(q);
+  console.log(window.location.hash);
+  if (!window.location.hash) {
+    newSearch(q);
+  } else {
+    newSearch(window.location.hash.replace("#", ""));
+  }
 
   $('#searchterm').keypress(function(event) {
     if (event.which == 13) {
