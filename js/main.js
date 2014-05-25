@@ -24,8 +24,7 @@ $(function() {
     var img = $("<img />");
     img.attr("src", post.img_src);
     img.width(w);
-
-    console.log(img);
+    img.css({"min-height": "200px"});
 
     outerDiv.append("<a href='" + post.permalink + "' target='_blank'>" + img[0].outerHTML + "</a>");
     return outerDiv[0].outerHTML;
@@ -39,7 +38,7 @@ $(function() {
 
     $.ajax({
       type: 'get',
-      url: "http://api.reddit.com/r/" + subreddit + "/hot.json?&after="+last_added,
+      url: "http://api.reddit.com/r/" + subreddit + "/hot.json?limit=10&after="+last_added,
       beforeSend: function() {
         $("#searchterm").addClass("loadinggif");
       },
