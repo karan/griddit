@@ -107,11 +107,11 @@ $(function() {
     }
   });
 
-  console.log(window.location.hash);
-  if (!window.location.hash) {
+  var hash = window.location.hash;
+  if (!hash) {
     newSearch(q);
   } else {
-    newSearch(window.location.hash.replace("#", ""));
+    newSearch(hash.substr(1));
   }
 
   $('#searchterm').keypress(function(event) {
