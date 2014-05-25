@@ -8,31 +8,31 @@ $(function() {
 
   var q = 'cats';
 
+  function getAllHtml(posts, callback) {
+    var html = '';
+    var w = $(window).innerWidth() / 3;
+    for (var i = 0; i < posts.length; i++) {
+      html += getOneHtml(posts[i], w);
+    }
+    callback(html);
+  }
+
   function getOneHtml(post, w) {
     var outerDiv = $("<div>", {class: "brick"});
     outerDiv.width(w);
 
     var img = $("<img />");
     img.attr("src", post.img_src);
+    img.width(w);
 
-    img.on('load', function() {
-      var ratio = this.width / w;
-      h = this.height / ratio;
-      $(this).css({'height': h});
-
-      outerDiv.append("<a href='" + post.permalink + "' target='_blank'>" + this.outerHTML + "</a>");
-
-      $("#grid").append(outerDiv[0].outerHTML);
-    });
+    outerDiv.append("<a href='" + post.permalink + "' target='_blank'>" + img[0].outerHTML + "</a>");
+    return outerDiv[0].outerHTML;
   }
 
 
   function requestData(subreddit, callback) {
     // array of objects with link to image, post title, link to reddit
     posts = [];
-
-    var w = $(window).innerWidth() / 3, 
-        html = '';
 
     $.ajax({
       type: 'get',
@@ -55,19 +55,20 @@ $(function() {
               'permalink': 'http://reddit.com' + res_post.data.permalink
             };
 
-            getOneHtml(post, w);
-            
+            posts.push(post);
+            last_added = res_post.data.name;
           }
-          last_added = res_post.data.name;
         });
 
         scrollLoad = true;
-        callback();
+        callback(posts);
       }
     });
   }
 
-  function makeWall() {
+  function makeWall(allhtml) {
+    $("#grid").append(allhtml);
+
     var wall = new freewall("#grid");
     wall.reset({
       selector: '.brick',
@@ -84,26 +85,32 @@ $(function() {
     $(window).trigger("resize");
   }
 
+  function newSearch(q) {
+    requestData(q, function(posts) {
+      getAllHtml(posts, function(allhtml) {
+        makeWall(allhtml);
+      });
+    });
+  }
+
   // infinite scroll
   $(window).scroll(function () { 
     if (scrollLoad && $(window).scrollTop() >= $(document).height() - $(window).height() - 50) {
       scrollLoad = false;
-      requestData(q, makeWall);
+      newSearch(q);
     }
   });
 
-  requestData(q, makeWall);
+  newSearch(q);
 
   $('#searchterm').keypress(function(event) {
     if (event.which == 13) {
       $("#grid").empty();
       last_added = '';
-
       // ga('send', 'event', 'input', 'search');
       event.preventDefault();
       q = $("#searchterm").val();
-      console.log(q);
-      requestData(q, makeWall);
+      newSearch(q);
     }
 
   });
