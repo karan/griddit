@@ -22,7 +22,6 @@ $(function() {
 
       outerDiv.append("<a href='" + post.permalink + "' target='_blank'>" + this.outerHTML + "</a>");
 
-      // return outerDiv[0].outerHTML;
       $("#grid").append(outerDiv[0].outerHTML);
     });
   }
