@@ -80,7 +80,9 @@ $(function() {
         wall.fitWidth();
       }
     });
-    wall.fitWidth();
+    wall.container.find('.brick img').load(function() {
+      wall.fitWidth();
+    });
 
     // for scroll bar appear;
     $(window).trigger("resize");
